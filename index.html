@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+	<head>
+		<title>final web porgraming</title>
+		<style type="text/css">
+		#img{
+			width:100px;//圖片大小
+			height:100px;
+			border-radius:60px;//把圖改圓角
+		}
+		p{
+			color:green;//改字體顏色
+			font-size:24px;//改字體大小
+		}
+		.font{
+			color:blue;//改字體顏色
+		}
+		</style>
+	</head>
+	<body>
+		<div >
+			<img id="img" src="img2.jpg">
+			<br>
+			<h1>名子:櫻京塚丈</h1>
+			<h2>電話:0988888888</h2>
+			<h3>電子郵件:123456@yahoo.com.tw</h3>
+			<h4>住址:ncu300</h4>
+			<h5>就讀學校:ncu</h5>
+			<h6>興趣:<ul><li>打遊戲</li><li>打code</li><li>腫脹</li></ul></h6>
+			<p>專長:繼續腫脹</p>
+			
+		</div>
+		<div>
+			<h1 >比特幣轉換美金小工具</h1>
+			<div class="flat">
+				<p>匯率日期</p>
+				<input  placeholder="請輸入日期" type="text" name="date" id="date">
+				<input  placeholder="請輸入金額" type="text" name="dollar" id="dollar">
+				<p>比特幣</p>
+				<input type="button" value="轉換" onclick="transfer()">
+				<p id="result1">為</p>
+			</div>
+			<div>
+				<table border="2">
+					<tr>
+						<th><p>當前匯率</p></th>
+					</tr>
+					<tr>
+						<td><p id="result2">美金</p></td>
+					</tr>
+				</table>
+			</div>
+			<script>
+			
+			function transfer(){
+				var date= document.getElementById("date").value;
+				var dollar=document.getElementById('dollar').value;
+				const uri='https://api.coindesk.com/v1/bpi/historical/close.json?start='+date+'&end='+date;
+				var status=new Request(uri);
+				fetch(status).then(function(response){if(response.status!=200){alert('查無該筆匯率資料');}});				
+
+				if(date!=null || dollar!=null){
+					var r=date.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/);
+					if(r!=null){
+						if(dollar>0){
+							fetch(status)
+								.then(content => {if(content!=null){return content.json();}else{alert('查無該筆匯率資料');}})
+								.then(content2 => {
+									if(content2.bpi[date]==null){
+										alert('查無該筆匯率資料');
+									}else{
+										document.getElementById("result1").innerHTML ="為" + content2.bpi[date]*dollar + "美金";
+										document.getElementById("result2").innerHTML ="1 比特幣約" + content2.bpi[date] + "美金"
+									}
+								})
+								.catch(function(){alert('查無該筆匯率資料');});
+						}else{
+							alert('輸入金額錯誤');
+						}
+					}else{
+						alert('日期請輸入正確格式:yyyy-mm-dd。ex:2021-06-11');
+					}
+				}else{
+					alert('請輸入日期或金額');
+				}			
+			}
+		</script>
+		</div>
+	</body>
+</html>
